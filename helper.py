@@ -24,7 +24,8 @@ def send_mails_to_all(doc_file, excel_file, sender, password):
             send_mail(sender, password, row["Email"], send_text)
         except Exception as e:
             unsent_msg.append(f"Couldn't send email to {row['Email']} due to {e}")
-
+    for message in unsent_msg:
+        print(message)
 
 def send_mail(sender, password, receiver, msg):
     context = ssl.create_default_context()

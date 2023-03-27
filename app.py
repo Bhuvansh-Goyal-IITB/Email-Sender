@@ -1,3 +1,5 @@
+import time
+
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import os
@@ -19,12 +21,6 @@ class App(ctk.CTk):
         self.container = ctk.CTkFrame(master=self)
         self.container.grid(row=0, column=0, padx=40, pady=40)
 
-        self.sender_email = ctk.CTkEntry(master=self.container, width=400, font=FONT)
-        self.sender_email.grid(row=0, column=0, columnspan=2, padx=20, pady=20)
-
-        self.sender_password = ctk.CTkEntry(master=self.container, width=400, font=FONT)
-        self.sender_password.grid(row=1, column=0, columnspan=2, padx=20, pady=20)
-
         self.add_files_button = ctk.CTkButton(master=self.container, width=150, font=FONT, text='Add files', command=self.add_files)
         self.add_files_button.grid(row=2, column=0, padx=30, pady=20)
 
@@ -39,13 +35,21 @@ class App(ctk.CTk):
         self.add_files_button.configure(state='disabled')
         self.container.grid_remove()
 
+        time.sleep(2)
+
+        with open('data.txt') as file:
+            lines = file.readlines()
+            email = lines[0]
+            password = lines[1]
+
         send_mails_to_all(
             doc_file=self.current_doc,
             excel_file=self.current_excel,
-            sender=self.sender_email.get(),
-            password=self.sender_password.get(),
+            sender=email,
+            password=password,
         )
 
+        self.add_files_button.configure(state='normal')
         self.container.grid(row=0, column=0, padx=40, pady=40)
         # show popup for done
 
