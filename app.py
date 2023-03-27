@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import os
 from helper import send_mails_to_all
 
@@ -34,16 +34,20 @@ class App(ctk.CTk):
         self.send_button.grid(row=2, column=1, padx=30, pady=20)
 
     def send_mails(self):
-        # show popup for sending
+        self.files_label.grid_remove()
+        self.send_button.configure(state='disabled')
+        self.add_files_button.configure(state='disabled')
+        self.container.grid_remove()
+
         send_mails_to_all(
             doc_file=self.current_doc,
             excel_file=self.current_excel,
             sender=self.sender_email.get(),
             password=self.sender_password.get(),
         )
+
+        self.container.grid(row=0, column=0, padx=40, pady=40)
         # show popup for done
-        self.files_label.grid_remove()
-        self.send_button.configure(state='disabled')
 
     def add_files(self):
         self.current_doc = filedialog.askopenfilename(

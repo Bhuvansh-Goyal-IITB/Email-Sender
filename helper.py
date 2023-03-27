@@ -13,11 +13,17 @@ def send_mails_to_all(doc_file, excel_file, sender, password):
         text = '\n\n'.join(full_text)
 
     df = pandas.read_excel(excel_file)
+    if 'Email' not in df:
+        return
+    unsent_msg = []
     for i, row in df.iterrows():
         send_text = text
         for column in df:
             send_text = send_text.replace(f"[{column}]", row[column])
-        send_mail(sender, password, row["Email"], send_text)
+        try:
+            send_mail(sender, password, row["Email"], send_text)
+        except Exception as e:
+            unsent_msg.append(f"Couldn't send email to {row['Email']} due to {e}")
 
 
 def send_mail(sender, password, receiver, msg):
